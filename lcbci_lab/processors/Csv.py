@@ -2,9 +2,9 @@ import csv
 import multiprocessing
 from time import strftime, gmtime, sleep
 
-from rtgraph.core.constants import Constants
-from rtgraph.common.fileManager import FileManager
-from rtgraph.common.logger import Logger as Log
+from lcbci_lab.core.constants import Constants
+from lcbci_lab.common.fileManager import FileManager
+from lcbci_lab.common.logger import Logger as Log
 
 
 TAG = "CSV"
@@ -39,7 +39,7 @@ class CSVProcess(multiprocessing.Process):
 
     def add(self, time, values):
         """
-        Adds a new row to fhe exported data file.
+        Adds a new row to the export data file.
         :param time: Timestamp for the row.
         :type time: float.
         :param values: Values to add in the row.
@@ -59,6 +59,7 @@ class CSVProcess(multiprocessing.Process):
         """
         Log.i(TAG, "Process starting...")
         self._csv = csv.writer(self._file, delimiter=Constants.csv_delimiter, quoting=csv.QUOTE_MINIMAL)
+        self._csv.writerow(['time', 'signal'])
         while not self._exit.is_set():
             self._consume_queue()
             sleep(self._timeout)

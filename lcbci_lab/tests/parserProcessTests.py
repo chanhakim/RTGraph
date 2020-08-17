@@ -2,8 +2,8 @@ import unittest
 import numpy as np
 from multiprocessing import Queue
 
-from rtgraph.processors.Parser import ParserProcess
-from rtgraph.core.constants import Constants
+from lcbci_lab.processors.Parser import ParserProcess
+from lcbci_lab.core.constants import Constants
 
 
 class ParserProcessTests(unittest.TestCase):

@@ -12,7 +12,7 @@ class main_ui(object):
 
     def setup_ui(self, MainWindow):
         MainWindow.setObjectName('MainWindow')
-        MainWindow.resize(720, 600)
+        MainWindow.resize(800, 600)
 
         # create central widget and layout
         self.central_widget = QtWidgets.QWidget(MainWindow)
@@ -28,7 +28,7 @@ class main_ui(object):
         # main layout: plot widget
         self.plt = GraphicsLayoutWidget()
         self.plt.setAutoFillBackground(False)
-        self.plt.setStyleSheet("border: 0px;")
+        self.plt.setStyleSheet("border: 1px;")
         self.plt.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.plt.setFrameShadow(QtWidgets.QFrame.Plain)
         self.plt.setLineWidth(0)
@@ -45,25 +45,9 @@ class main_ui(object):
         # create control layout
         self.control_layout = QtWidgets.QVBoxLayout()
         self.control_layout.setObjectName("control_layout")
-        self.control_layout.addWidget(QtWidgets.QLabel())
-
-        # control layout: file options label
-        self.qLabel_FileOptions = QtWidgets.QLabel("File Options")
-        self.qLabel_FileOptions.setObjectName("qLabel_FileOptions")
-        self.qLabel_FileOptions.setAlignment(QtCore.Qt.AlignCenter)
-        self.control_layout.addWidget(self.qLabel_FileOptions)
-
-        # control layout: open button
-        self.pButton_Open = QtWidgets.QPushButton("Open")
-        self.pButton_Open.setObjectName("pButton_Open")
-        self.control_layout.addWidget(self.pButton_Open)
-
-        # control layout: save button
-        self.pButton_Save = QtWidgets.QPushButton("Save")
-        self.pButton_Save.setObjectName("pButton_Save")
-        self.control_layout.addWidget(self.pButton_Save)
-
-        self.control_layout.addWidget(_qline()) # hline separator
+        empty = QtWidgets.QLabel()
+        empty.setFixedWidth(140)
+        self.control_layout.addWidget(empty)
 
         # control layout: control options label
         self.qLabel_ControlOptions = QtWidgets.QLabel("Control Options")
@@ -86,38 +70,48 @@ class main_ui(object):
         self.pButton_Record.setObjectName("pButton_Record")
         self.control_layout.addWidget(self.pButton_Record)
 
-        # control layout: play button
-        self.pButton_Play = QtWidgets.QPushButton("Play")
-        self.pButton_Play.setObjectName("pButton_Play")
-        self.control_layout.addWidget(self.pButton_Play)
+        # control layout: save button
+        self.pButton_Save = QtWidgets.QPushButton("Save")
+        self.pButton_Save.setObjectName("pButton_Save")
+        self.control_layout.addWidget(self.pButton_Save)
 
         self.control_layout.addWidget(_qline()) # hline separator
 
-        # control layout: arduino options label
-        self.qLabel_ArduinoOptions = QtWidgets.QLabel("Arduino Options")
-        self.qLabel_ArduinoOptions.setObjectName("qLabel_ArduinoOptions")
-        self.qLabel_ArduinoOptions.setAlignment(QtCore.Qt.AlignCenter)
-        self.control_layout.addWidget(self.qLabel_ArduinoOptions)
-
-        # control layout: refresh ports button
-        self.pButton_RefreshPorts = QtWidgets.QPushButton("Refresh Ports")
-        self.pButton_RefreshPorts.setObjectName("pButton_RefreshPorts")
-        self.control_layout.addWidget(self.pButton_RefreshPorts)
+        # control layout: BCI options label
+        self.qLabel_BCIOptions = QtWidgets.QLabel("BCI/Plot Options")
+        self.qLabel_BCIOptions.setObjectName("qLabel_BCIOptions")
+        self.qLabel_BCIOptions.setAlignment(QtCore.Qt.AlignCenter)
+        self.control_layout.addWidget(self.qLabel_BCIOptions)
 
         # control layout: port id combo box
-        self.cBox_PortID = QtWidgets.QComboBox()
-        self.cBox_PortID.setObjectName("cBox_PortID")
-        self.control_layout.addWidget(self.cBox_PortID)
+        self.cBox_Port = QtWidgets.QComboBox()
+        self.cBox_Port.setObjectName("cBox_Ports")
+        self.cBox_Port.addItem("Ports (Refresh)")
+        self.cBox_Port.setFixedWidth(140)
+        self.control_layout.addWidget(self.cBox_Port)
 
         # control layout: baud rate combo box
         self.cBox_BaudRate = QtWidgets.QComboBox()
         self.cBox_BaudRate.setObjectName("cBox_BaudRate")
+        self.cBox_BaudRate.addItems([str(num) for num in ["Baud Rate", 9600, 14400, 19200, 38400, 115200]])
+        self.cBox_BaudRate.setFixedWidth(140)
         self.control_layout.addWidget(self.cBox_BaudRate)
 
-        # control layout: connect button
-        self.pButton_Connect = QtWidgets.QPushButton("Connect")
-        self.pButton_Connect.setObjectName("pButton_Connect")
-        self.control_layout.addWidget(self.pButton_Connect)
+        # control layout: frequency spin box
+        self.sBox_Frequency = QtWidgets.QSpinBox()
+        self.sBox_Frequency.setObjectName("sBox_Frequency")
+        self.sBox_Frequency.setMinimum(1)
+        self.sBox_Frequency.setMaximum(1000)
+        self.sBox_Frequency.setProperty('value', 200)
+        self.control_layout.addWidget(self.sBox_Frequency)
+
+        # control layout: plot sample no. spin box
+        self.sBox_Samples = QtWidgets.QSpinBox()
+        self.sBox_Samples.setObjectName("sBox_Samples")
+        self.sBox_Samples.setMinimum(2)
+        self.sBox_Samples.setMaximum(100000)
+        self.sBox_Samples.setProperty('value', 1000)
+        self.control_layout.addWidget(self.sBox_Samples)
 
         self.control_layout.addWidget(_qline()) # hline separator
 
@@ -144,7 +138,14 @@ class main_ui(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "lcbci lab"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "lcbci_lab"))
+        self.pButton_Start.setText(_translate("MainWindow", "Start"))
+        self.pButton_Stop.setText(_translate("MainWindow", "Stop"))
+        self.pButton_Record.setText(_translate("MainWindow", "Record"))
+        self.pButton_Save.setText(_translate("MainWindow", "Save"))
+        self.sBox_Frequency.setSuffix(_translate("MainWindow", " Hz"))
+        self.sBox_Samples.setSuffix(_translate("MainWindow", " Samples"))
+        
         # self.pButton_Stop.setText(_translate("MainWindow", "Stop"))
         # self.pButton_Start.setText(_translate("MainWindow", "Start"))
         # self.sBox_Samples.setSuffix(_translate("MainWindow", " samples"))

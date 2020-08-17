@@ -1,8 +1,8 @@
 import argparse
 
-from rtgraph.common.logger import Logger as Log
-from rtgraph.common.logger import LoggerLevel
-from rtgraph.core.constants import Constants
+from lcbci_lab.common.logger import Logger as Log
+from lcbci_lab.common.logger import LoggerLevel
+from lcbci_lab.core.constants import Constants
 
 
 TAG = "Arguments"
@@ -20,7 +20,7 @@ class Arguments:
         Creates and parses the arguments to be used by the application.
         :return:
         """
-        parser = argparse.ArgumentParser(description='RTGraph\nA real time plotting and logging application')
+        parser = argparse.ArgumentParser(description='lcbci_lab\nA real time plotting and logging application')
         parser.add_argument("-i", "--info",
                             dest="log_level_info",
                             action='store_true',

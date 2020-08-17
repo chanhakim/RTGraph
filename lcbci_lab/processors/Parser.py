@@ -1,8 +1,8 @@
 import multiprocessing
 from time import sleep
 
-from rtgraph.core.constants import Constants
-from rtgraph.common.logger import Logger as Log
+from lcbci_lab.core.constants import Constants
+from lcbci_lab.common.logger import Logger as Log
 
 
 TAG = "Parser"

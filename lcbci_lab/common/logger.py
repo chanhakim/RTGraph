@@ -3,9 +3,9 @@ import logging.handlers
 import sys
 from enum import Enum
 
-from rtgraph.common.architecture import Architecture
-from rtgraph.common.fileManager import FileManager
-from rtgraph.core.constants import Constants
+from lcbci_lab.common.architecture import Architecture
+from lcbci_lab.common.fileManager import FileManager
+from lcbci_lab.core.constants import Constants
 
 
 class Logger:

@@ -1,18 +1,18 @@
 all: gui
 
 gui:
-	$(MAKE) -C rtgraph/res
+	$(MAKE) -C lcbci_lab/res
 
 run:
-	python -m rtgraph -v
+	python -m lcbci_lab -v
 
 doc:
 	$(MAKE) html -C docs
 
 .PHONY: clean
 clean:
-	$(MAKE) clean -C rtgraph/res
+	$(MAKE) clean -C lcbci_lab/res
 	$(MAKE) clean -C docs
-	rm -rf rtgraph/*.pyc
-	rm -rf rtgraph/__pycache__
+	rm -rf lcbci_lab/*.pyc
+	rm -rf lcbci_lab/__pycache__
 	rm -rf data

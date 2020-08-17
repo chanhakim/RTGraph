@@ -4,10 +4,10 @@ from time import time
 import serial
 from serial.tools import list_ports
 
-from rtgraph.common.architecture import Architecture
-from rtgraph.common.architecture import OSType
-from rtgraph.core.constants import Constants
-from rtgraph.common.logger import Logger as Log
+from lcbci_lab.common.architecture import Architecture
+from lcbci_lab.common.architecture import OSType
+from lcbci_lab.core.constants import Constants
+from lcbci_lab.common.logger import Logger as Log
 
 
 TAG = "Serial"

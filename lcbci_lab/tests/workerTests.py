@@ -1,8 +1,8 @@
 import unittest
 from time import sleep
 
-from rtgraph.core.worker import Worker
-from rtgraph.core.constants import SourceType
+from lcbci_lab.core.worker import Worker
+from lcbci_lab.core.constants import SourceType
 
 
 class WorkerTests(unittest.TestCase):

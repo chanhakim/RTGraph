@@ -1,10 +1,9 @@
-# from rtgraph.ui.mainWindow_ui import *
-from rtgraph.ui.lcbci_ui import *
+from lcbci_lab.ui.lcbci_ui import *
 
-from rtgraph.core.worker import Worker
-from rtgraph.core.constants import Constants, SourceType
-from rtgraph.ui.popUp import PopUp
-from rtgraph.common.logger import Logger as Log
+from lcbci_lab.core.worker import Worker
+from lcbci_lab.core.constants import Constants, SourceType
+from lcbci_lab.ui.popUp import PopUp
+from lcbci_lab.common.logger import Logger as Log
 
 
 TAG = "MainWindow"
@@ -25,8 +24,6 @@ class MainWindow(QtGui.QMainWindow):
         :type samples: int.
         """
         QtGui.QMainWindow.__init__(self)
-        # self.ui = Ui_MainWindow()
-        # self.ui.setupUi(self)
         self.ui = main_ui()
         self.ui.setup_ui(self)
 
@@ -37,18 +34,14 @@ class MainWindow(QtGui.QMainWindow):
 
         # configures
         # self.ui.cBox_Source.addItems(Constants.app_sources)
-        # self._configure_plot()
-        # self._configure_timers()
-        # self._configure_signals()
+        self._configure_plot()
+        self._configure_timers()
+        self._configure_signals()
 
-        # populate combo box for serial ports
-        # self._source_changed()
-        # self.ui.cBox_Source.setCurrentIndex(SourceType.serial.value)
-
-        # self.ui.sBox_Samples.setValue(samples)
+        self.ui.sBox_Samples.setValue(samples)
 
         # enable ui
-        # self._enable_ui(True)
+        self._enable_ui(True)
 
     def start(self):
         """
@@ -57,17 +50,22 @@ class MainWindow(QtGui.QMainWindow):
         :return:
         """
         Log.i(TAG, "Clicked start")
-        self.worker = Worker(port=self.ui.cBox_Port.currentText(),
-                             speed=float(self.ui.cBox_Speed.currentText()),
-                             samples=self.ui.sBox_Samples.value(),
-                             export_enabled=self.ui.chBox_export.isChecked())
-        if self.worker.start():
-            self._timer_plot.start(Constants.plot_update_ms)
-            self._enable_ui(False)
+        port_id, baud_rate = self.ui.cBox_Port.currentText(), self.ui.cBox_BaudRate.currentText()
+        if (port_id != "Ports (Refresh)") and (baud_rate != "Baud Rate"):
+            self.worker = Worker(port=self.ui.cBox_Port.currentText(),
+                                speed=int(self.ui.cBox_BaudRate.currentText()),
+                                samples=self.ui.sBox_Samples.value())
+            if self.worker.start():
+                self._timer_plot.start(Constants.plot_update_ms)
+                self._enable_ui(False)
+            else:
+                Log.i(TAG, "Port is not available")
+                PopUp.warning(self, Constants.app_title, "Selected port \"{}\" is not available"
+                            .format(self.ui.cBox_Port.currentText()))
         else:
-            Log.i(TAG, "Port is not available")
-            PopUp.warning(self, Constants.app_title, "Selected port \"{}\" is not available"
-                          .format(self.ui.cBox_Port.currentText()))
+            Log.i(TAG, "No port or baud rate was selected")
+            PopUp.warning(self, Constants.app_title, "Select a port and baud rate")
+        
 
     def stop(self):
         """
@@ -82,10 +80,27 @@ class MainWindow(QtGui.QMainWindow):
 
     def record(self):
         """
-        Starts recording signal from the selected port.
+        Starts recording signal from the selected port. Function
+        is connected to the record button
         :return:
         """
-        None
+        Log.i(TAG, "Clicked record")
+        port_id, baud_rate = self.ui.cBox_Port.currentText(), self.ui.cBox_BaudRate.currentText()
+        if (port_id != "Ports (Refresh)") and (baud_rate != "Baud Rate"):
+            self.worker = Worker(port=self.ui.cBox_Port.currentText(),
+                                speed=int(self.ui.cBox_BaudRate.currentText()),
+                                samples=self.ui.sBox_Samples.value(),
+                                export_enabled=True)
+            if self.worker.start():
+                self._timer_plot.start(Constants.plot_update_ms)
+                self._enable_ui(False)
+            else:
+                Log.i(TAG, "Port is not available")
+                PopUp.warning(self, Constants.app_title, "Selected port \"{}\" is not available"
+                            .format(self.ui.cBox_Port.currentText()))
+        else:
+            Log.i(TAG, "No port or baud rate was selected")
+            PopUp.warning(self, Constants.app_title, "Select a port and baud rate")
 
     def record90s(self):
         """
@@ -116,18 +131,18 @@ class MainWindow(QtGui.QMainWindow):
         :return:
         """
         self.ui.cBox_Port.setEnabled(enabled)
-        self.ui.cBox_Speed.setEnabled(enabled)
+        self.ui.cBox_BaudRate.setEnabled(enabled)
         self.ui.pButton_Start.setEnabled(enabled)
-        self.ui.chBox_export.setEnabled(enabled)
-        self.ui.cBox_Source.setEnabled(enabled)
         self.ui.pButton_Stop.setEnabled(not enabled)
+        self.ui.pButton_Record.setEnabled(enabled)
+        self.ui.pButton_Save.setEnabled(enabled)
 
     def _configure_plot(self):
         """
         Configures specific elements of the PyQtGraph plots.
         :return:
         """
-        self.ui.plt.setBackground(background=None)
+        # self.ui.plt.setBackground(background=None)
         self.ui.plt.setAntialiasing(True)
         self._plt = self.ui.plt.addPlot(row=1, col=1)
         self._plt.setLabel('bottom', Constants.plot_xlabel_title, Constants.plot_xlabel_unit)
@@ -147,8 +162,12 @@ class MainWindow(QtGui.QMainWindow):
         """
         self.ui.pButton_Start.clicked.connect(self.start)
         self.ui.pButton_Stop.clicked.connect(self.stop)
+        self.ui.pButton_Record.clicked.connect(self.record)
+        self.ui.cBox_Port.activated.connect(self._update_port)
         self.ui.sBox_Samples.valueChanged.connect(self._update_sample_size)
         # self.ui.cBox_Source.currentIndexChanged.connect(self._source_changed)
+
+        self._update_port()
 
     def _update_sample_size(self):
         """
@@ -175,32 +194,24 @@ class MainWindow(QtGui.QMainWindow):
                            y=self.worker.get_values_buffer(idx),
                            pen=Constants.plot_colors[idx])
 
-    # def _source_changed(self):
-    #     """
-    #     Updates the source and depending boxes on change.
-    #     This function is connected to the indexValueChanged signal of the Source ComboBox.
-    #     :return:
-    #     """
-    #     Log.i(TAG, "Scanning source {}".format(self._get_source().name))
-    #     # clear boxes before adding new
-    #     self.ui.cBox_Port.clear()
-    #     self.ui.cBox_Speed.clear()
+    def _update_port(self):
+        """
+        Updates the source and depending boxes on change.
+        This function is connected to the indexValueChanged signal of the Source ComboBox.
+        :return:
+        """
+        tmp = self.ui.cBox_Port.currentText()
+        if  tmp == "Ports (Refresh)":
+            Log.i(TAG, "Scanning source serial")
+            # clear boxes before adding new
+            self.ui.cBox_Port.clear()
 
-    #     source = self._get_source()
-    #     ports = self.worker.get_source_ports(source)
-    #     speeds = self.worker.get_source_speeds(source)
+            ports = self.worker.get_source_ports(SourceType.serial)
+            ports.insert(0, "Ports (Refresh)")
 
-    #     if ports is not None:
-    #         self.ui.cBox_Port.addItems(ports)
-    #     if speeds is not None:
-    #         self.ui.cBox_Speed.addItems(speeds)
-    #     if self._get_source() == SourceType.serial:
-    #         self.ui.cBox_Speed.setCurrentIndex(len(speeds) - 1)
+            if ports is not None:
+                self.ui.cBox_Port.addItems(ports)
+        else:
+            Log.i(TAG, "Serial port {} was selected".format(tmp))
 
-    # def _get_source(self):
-    #     """
-    #     Gets the current source type.
-    #     :return: Current Source type.
-    #     :rtype: SourceType.
-    #     """
-    #     return SourceType(self.ui.cBox_Source.currentIndex())
+

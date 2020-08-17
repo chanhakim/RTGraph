@@ -1,11 +1,11 @@
 from multiprocessing import Queue
 
-from rtgraph.core.constants import Constants, SourceType
-from rtgraph.core.ringBuffer import RingBuffer
-from rtgraph.processors.Csv import CSVProcess
-from rtgraph.processors.Parser import ParserProcess
-from rtgraph.processors.Serial import SerialProcess
-from rtgraph.common.logger import Logger as Log
+from lcbci_lab.core.constants import Constants, SourceType
+from lcbci_lab.core.ringBuffer import RingBuffer
+from lcbci_lab.processors.Csv import CSVProcess
+from lcbci_lab.processors.Parser import ParserProcess
+from lcbci_lab.processors.Serial import SerialProcess
+from lcbci_lab.common.logger import Logger as Log
 
 
 TAG = "Worker"
@@ -18,6 +18,7 @@ class Worker:
     def __init__(self,
                  port=None,
                  speed=Constants.serial_default_speed,
+                 frequency=Constants.argument_default_frequency,
                  samples=Constants.argument_default_samples,
                  source=SourceType.serial,
                  export_enabled=False,
@@ -27,7 +28,9 @@ class Worker:
         :param port: Port to open on start.
         :type port: str.
         :param speed: Speed for the specified port (depending on source).
-        :type speed: float.
+        :type speed: int.
+        :param frequency: Frequency of the BCI signal input.
+        :type frequency: int.
         :param samples: Number of samples to keep in the buffers (should match with plot samples).
         :type samples: int.
         :param source: Source type where data should be obtained
@@ -49,6 +52,7 @@ class Worker:
         self._port = port
         self._speed = float(speed)
         self._samples = samples
+        self._frequency = frequency
         self._source = source
         self._export = export_enabled
         self._path = export_path
@@ -159,6 +163,9 @@ class Worker:
         :rtype: bool.
         """
         return self._acquisition_process is not None and self._acquisition_process.is_alive()
+
+    def get_filepath(self):
+        return self._csv_process.get_filepath()
 
     @staticmethod
     def get_source_ports(source):

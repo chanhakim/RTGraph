@@ -2,17 +2,17 @@ from multiprocessing import freeze_support
 import sys
 from PyQt5 import QtGui
 
-from rtgraph.common.architecture import Architecture
-from rtgraph.common.arguments import *
-from rtgraph.common.logger import Logger as Log
-from rtgraph.core.constants import MinimalPython
-from rtgraph.ui import mainWindow
+from lcbci_lab.common.architecture import Architecture
+from lcbci_lab.common.arguments import *
+from lcbci_lab.common.logger import Logger as Log
+from lcbci_lab.core.constants import MinimalPython
+from lcbci_lab.ui import mainWindow
 
 
-TAG = "RTGraph"
+TAG = "lcbci_lab"
 
 
-class RTGraph:
+class lcbci_lab:
     def __init__(self, argv=sys.argv):
         freeze_support()
         self._args = self._init_logger()
@@ -20,13 +20,13 @@ class RTGraph:
 
     def run(self):
         if Architecture.is_python_version(MinimalPython.major, minor=MinimalPython.minor):
-            Log.i(TAG, "Starting RTGraph")
+            Log.i(TAG, "Starting lcbci_lab")
             win = mainWindow.MainWindow(samples=self._args.get_user_samples())
             win.setWindowTitle("{} - {}".format(Constants.app_title, Constants.app_version))
             win.show()
             self._app.exec()
 
-            Log.i(TAG, "Finishing RTGraph\n")
+            Log.i(TAG, "Finishing lcbci_lab\n")
             win.close()
         else:
             self._fail()
@@ -46,10 +46,10 @@ class RTGraph:
 
     @staticmethod
     def _fail():
-        txt = str("RTGraph requires Python {}.{} to run"
+        txt = str("lcbci_lab requires Python {}.{} to run"
                   .format(MinimalPython.major, MinimalPython.minor))
         Log.e(TAG, txt)
 
 
 if __name__ == '__main__':
-    RTGraph().run()
+    lcbci_lab().run()
