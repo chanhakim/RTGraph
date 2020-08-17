@@ -5,19 +5,19 @@ class SourceType(Enum):
     """
     Enum for the types of sources. Indices MUST match app_sources constant.
     """
-    simulator = 1
+    # simulator = 1
     serial = 0
-    SocketClient = 2
+    # SocketClient = 2
 
 
 class Constants:
     """
     Common constants for the application.
     """
-    app_title = "RTGraph"
-    app_version = '0.3.1'
+    app_title = "lcbci_lab"
+    app_version = '0.0.1'
     app_export_path = "data"
-    app_sources = ["Serial", "Simulator", "Socket Client"]
+    app_sources = ["Serial"]
     app_encoding = "utf-8"
 
     plot_update_ms = 16

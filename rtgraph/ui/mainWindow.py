@@ -1,4 +1,5 @@
-from rtgraph.ui.mainWindow_ui import *
+# from rtgraph.ui.mainWindow_ui import *
+from rtgraph.ui.lcbci_ui import *
 
 from rtgraph.core.worker import Worker
 from rtgraph.core.constants import Constants, SourceType
@@ -13,7 +14,7 @@ class MainWindow(QtGui.QMainWindow):
     """
     Handles the ui elements and connects to worker service to execute processes.
     """
-    def __init__(self, port=None, bd=115200, samples=500):
+    def __init__(self, port=None, bd=115200, samples=1000):
         """
         Initializes values for the UI.
         :param port: Default port name to be used. It will also disable scanning available ports.
@@ -24,8 +25,10 @@ class MainWindow(QtGui.QMainWindow):
         :type samples: int.
         """
         QtGui.QMainWindow.__init__(self)
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
+        # self.ui = Ui_MainWindow()
+        # self.ui.setupUi(self)
+        self.ui = main_ui()
+        self.ui.setup_ui(self)
 
         # Shared variables, initial values
         self._plt = None
@@ -33,19 +36,19 @@ class MainWindow(QtGui.QMainWindow):
         self.worker = Worker()
 
         # configures
-        self.ui.cBox_Source.addItems(Constants.app_sources)
-        self._configure_plot()
-        self._configure_timers()
-        self._configure_signals()
+        # self.ui.cBox_Source.addItems(Constants.app_sources)
+        # self._configure_plot()
+        # self._configure_timers()
+        # self._configure_signals()
 
         # populate combo box for serial ports
-        self._source_changed()
-        self.ui.cBox_Source.setCurrentIndex(SourceType.serial.value)
+        # self._source_changed()
+        # self.ui.cBox_Source.setCurrentIndex(SourceType.serial.value)
 
-        self.ui.sBox_Samples.setValue(samples)
+        # self.ui.sBox_Samples.setValue(samples)
 
         # enable ui
-        self._enable_ui(True)
+        # self._enable_ui(True)
 
     def start(self):
         """
@@ -57,7 +60,6 @@ class MainWindow(QtGui.QMainWindow):
         self.worker = Worker(port=self.ui.cBox_Port.currentText(),
                              speed=float(self.ui.cBox_Speed.currentText()),
                              samples=self.ui.sBox_Samples.value(),
-                             source=self._get_source(),
                              export_enabled=self.ui.chBox_export.isChecked())
         if self.worker.start():
             self._timer_plot.start(Constants.plot_update_ms)
@@ -77,6 +79,23 @@ class MainWindow(QtGui.QMainWindow):
         self._timer_plot.stop()
         self._enable_ui(True)
         self.worker.stop()
+
+    def record(self):
+        """
+        Starts recording signal from the selected port.
+        :return:
+        """
+        None
+
+    def record90s(self):
+        """
+        Records 90 seconds of signal from the selected port.
+        :return:
+        """
+        # either use the time module and run start -> stop for 90s
+        # or compute the number of samples to be taken over the course of time
+        # (e.g., for a 90s recording at 200 hz, 90*200 samples should be taken)
+        None
 
     def closeEvent(self, evnt):
         """
@@ -129,7 +148,7 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.pButton_Start.clicked.connect(self.start)
         self.ui.pButton_Stop.clicked.connect(self.stop)
         self.ui.sBox_Samples.valueChanged.connect(self._update_sample_size)
-        self.ui.cBox_Source.currentIndexChanged.connect(self._source_changed)
+        # self.ui.cBox_Source.currentIndexChanged.connect(self._source_changed)
 
     def _update_sample_size(self):
         """
@@ -156,32 +175,32 @@ class MainWindow(QtGui.QMainWindow):
                            y=self.worker.get_values_buffer(idx),
                            pen=Constants.plot_colors[idx])
 
-    def _source_changed(self):
-        """
-        Updates the source and depending boxes on change.
-        This function is connected to the indexValueChanged signal of the Source ComboBox.
-        :return:
-        """
-        Log.i(TAG, "Scanning source {}".format(self._get_source().name))
-        # clear boxes before adding new
-        self.ui.cBox_Port.clear()
-        self.ui.cBox_Speed.clear()
+    # def _source_changed(self):
+    #     """
+    #     Updates the source and depending boxes on change.
+    #     This function is connected to the indexValueChanged signal of the Source ComboBox.
+    #     :return:
+    #     """
+    #     Log.i(TAG, "Scanning source {}".format(self._get_source().name))
+    #     # clear boxes before adding new
+    #     self.ui.cBox_Port.clear()
+    #     self.ui.cBox_Speed.clear()
 
-        source = self._get_source()
-        ports = self.worker.get_source_ports(source)
-        speeds = self.worker.get_source_speeds(source)
+    #     source = self._get_source()
+    #     ports = self.worker.get_source_ports(source)
+    #     speeds = self.worker.get_source_speeds(source)
 
-        if ports is not None:
-            self.ui.cBox_Port.addItems(ports)
-        if speeds is not None:
-            self.ui.cBox_Speed.addItems(speeds)
-        if self._get_source() == SourceType.serial:
-            self.ui.cBox_Speed.setCurrentIndex(len(speeds) - 1)
+    #     if ports is not None:
+    #         self.ui.cBox_Port.addItems(ports)
+    #     if speeds is not None:
+    #         self.ui.cBox_Speed.addItems(speeds)
+    #     if self._get_source() == SourceType.serial:
+    #         self.ui.cBox_Speed.setCurrentIndex(len(speeds) - 1)
 
-    def _get_source(self):
-        """
-        Gets the current source type.
-        :return: Current Source type.
-        :rtype: SourceType.
-        """
-        return SourceType(self.ui.cBox_Source.currentIndex())
+    # def _get_source(self):
+    #     """
+    #     Gets the current source type.
+    #     :return: Current Source type.
+    #     :rtype: SourceType.
+    #     """
+    #     return SourceType(self.ui.cBox_Source.currentIndex())
