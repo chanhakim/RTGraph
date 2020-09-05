@@ -1,5 +1,6 @@
 from PyQt5 import QtGui
-
+from pathlib import Path
+import datetime
 
 class PopUp:
     @staticmethod
@@ -36,3 +37,13 @@ class PopUp:
         :return:
         """
         QtGui.QMessageBox.warning(parent, title, message, QtGui.QMessageBox.Ok)
+
+    @staticmethod
+    def save_file(parent):
+        """
+        Shows a popup window for saving the file at a desired path with name.
+        :return filepath:
+        :rtype str:
+        """
+        file_name, _ = QtGui.QFileDialog.getSaveFileName(parent, caption='Save File', directory='{path}/lcbci_recording_{date}'.format(path=str(Path.home()), date=datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')), filter='*.csv')
+        return file_name

@@ -1,3 +1,4 @@
+import os
 import csv
 import multiprocessing
 from time import strftime, gmtime, sleep
@@ -33,8 +34,8 @@ class CSVProcess(multiprocessing.Process):
         self._timeout = timeout
 
         if filename is None:
-            filename = strftime(Constants.csv_default_filename, gmtime())
-        self._file = self._create_file(filename, path=path)
+            filename = 'temp_{}'.format(strftime(Constants.csv_default_filename, gmtime()))
+        self._file, self._filepath = self._create_file(filename, path=path)
         Log.i(TAG, "Process ready")
 
     def add(self, time, values):
@@ -88,6 +89,14 @@ class CSVProcess(multiprocessing.Process):
         Log.i(TAG, "Process finishing...")
         self._exit.set()
 
+    def get_filepath(self):
+        """
+        Returns the file path where the data is being saved.
+        :return: filepath.
+        :rtype: str.
+        """
+        return self._filepath
+
     @staticmethod
     def _create_file(filename, path=None, extension=Constants.csv_extension):
         """
@@ -101,8 +110,8 @@ class CSVProcess(multiprocessing.Process):
         :return: Reference to the export file.
         """
         FileManager.create_dir(path)
-        full_path = FileManager.create_file(filename, extension=extension, path=path)
+        full_path = FileManager.create_file(filename, extension=extension, path=os.path.abspath(path))
         if not FileManager.file_exists(full_path):
             Log.i(TAG, "Storing in {}".format(full_path))
-            return open(full_path, "a", newline='')
+            return open(full_path, "a", newline=''), full_path
         return None

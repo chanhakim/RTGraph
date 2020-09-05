@@ -49,6 +49,8 @@ class Worker:
         self._parser_process = None
         self._csv_process = None
 
+        self._filepath = None
+
         self._port = port
         self._speed = float(speed)
         self._samples = samples
@@ -66,6 +68,7 @@ class Worker:
         if self._export:
             self._csv_process = CSVProcess(path=self._path)
             self._parser_process = ParserProcess(self._queue, store_reference=self._csv_process)
+            self._filepath = self._csv_process.get_filepath()
         else:
             self._parser_process = ParserProcess(self._queue)
 
@@ -165,7 +168,12 @@ class Worker:
         return self._acquisition_process is not None and self._acquisition_process.is_alive()
 
     def get_filepath(self):
-        return self._csv_process.get_filepath()
+        """
+        Returns the filepath
+        :return: Filepath of recording.
+        :rtype: str.
+        """
+        return self._filepath
 
     @staticmethod
     def get_source_ports(source):

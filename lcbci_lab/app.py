@@ -25,7 +25,6 @@ class lcbci_lab:
             win.setWindowTitle("{} - {}".format(Constants.app_title, Constants.app_version))
             win.show()
             self._app.exec()
-
             Log.i(TAG, "Finishing lcbci_lab\n")
             win.close()
         else:

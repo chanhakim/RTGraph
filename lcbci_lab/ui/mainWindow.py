@@ -1,10 +1,11 @@
+import shutil
+
 from lcbci_lab.ui.lcbci_ui import *
 
 from lcbci_lab.core.worker import Worker
 from lcbci_lab.core.constants import Constants, SourceType
 from lcbci_lab.ui.popUp import PopUp
 from lcbci_lab.common.logger import Logger as Log
-
 
 TAG = "MainWindow"
 
@@ -26,10 +27,12 @@ class MainWindow(QtGui.QMainWindow):
         QtGui.QMainWindow.__init__(self)
         self.ui = main_ui()
         self.ui.setup_ui(self)
+        self.session_files = []
 
         # Shared variables, initial values
         self._plt = None
         self._timer_plot = None
+        self._isrecording = False
         self.worker = Worker()
 
         # configures
@@ -77,6 +80,11 @@ class MainWindow(QtGui.QMainWindow):
         self._timer_plot.stop()
         self._enable_ui(True)
         self.worker.stop()
+        self.session_files.append(self.worker.get_filepath())
+        if self._isrecording == True:
+            self._isrecording = False
+            self.save()
+
 
     def record(self):
         """
@@ -85,6 +93,7 @@ class MainWindow(QtGui.QMainWindow):
         :return:
         """
         Log.i(TAG, "Clicked record")
+        self._isrecording = True
         port_id, baud_rate = self.ui.cBox_Port.currentText(), self.ui.cBox_BaudRate.currentText()
         if (port_id != "Ports (Refresh)") and (baud_rate != "Baud Rate"):
             self.worker = Worker(port=self.ui.cBox_Port.currentText(),
@@ -98,9 +107,11 @@ class MainWindow(QtGui.QMainWindow):
                 Log.i(TAG, "Port is not available")
                 PopUp.warning(self, Constants.app_title, "Selected port \"{}\" is not available"
                             .format(self.ui.cBox_Port.currentText()))
+                return None
         else:
             Log.i(TAG, "No port or baud rate was selected")
             PopUp.warning(self, Constants.app_title, "Select a port and baud rate")
+            return None
 
     def record90s(self):
         """
@@ -110,7 +121,27 @@ class MainWindow(QtGui.QMainWindow):
         # either use the time module and run start -> stop for 90s
         # or compute the number of samples to be taken over the course of time
         # (e.g., for a 90s recording at 200 hz, 90*200 samples should be taken)
-        None
+        self.record()
+        QtCore.QTimer.singleShot(90000, self.stop)
+
+    def save(self):
+        """
+        Saves the recorded file to the desired location.
+        :return:
+        """
+        Log.i(TAG, "Clicked save")
+        if len(self.session_files) > 0:
+            save_path = PopUp.save_file(self)
+            if save_path != '':
+                Log.i(TAG, "Saving {} at {}".format(self.session_files[-1], save_path))
+                shutil.copyfile(self.session_files[-1], save_path)
+                Log.i(TAG, "Saved {} at {}".format(self.session_files[-1], save_path))
+            else:
+                Log.i(TAG, "No file name entered, so file wasn't saved.")
+        else:
+            Log.i(TAG, "No signal files in current session.")
+            PopUp.warning(self, Constants.app_title, "Record signal before saving.")
+
 
     def closeEvent(self, evnt):
         """
@@ -135,6 +166,7 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.pButton_Start.setEnabled(enabled)
         self.ui.pButton_Stop.setEnabled(not enabled)
         self.ui.pButton_Record.setEnabled(enabled)
+        self.ui.pButton_Record.setEnabled(enabled)
         self.ui.pButton_Save.setEnabled(enabled)
 
     def _configure_plot(self):
@@ -142,7 +174,7 @@ class MainWindow(QtGui.QMainWindow):
         Configures specific elements of the PyQtGraph plots.
         :return:
         """
-        # self.ui.plt.setBackground(background=None)
+        self.ui.plt.setBackground(background=[34,34,34,255])
         self.ui.plt.setAntialiasing(True)
         self._plt = self.ui.plt.addPlot(row=1, col=1)
         self._plt.setLabel('bottom', Constants.plot_xlabel_title, Constants.plot_xlabel_unit)
@@ -163,9 +195,10 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.pButton_Start.clicked.connect(self.start)
         self.ui.pButton_Stop.clicked.connect(self.stop)
         self.ui.pButton_Record.clicked.connect(self.record)
+        self.ui.pButton_Record90s.clicked.connect(self.record90s)
+        self.ui.pButton_Save.clicked.connect(self.save)
         self.ui.cBox_Port.activated.connect(self._update_port)
         self.ui.sBox_Samples.valueChanged.connect(self._update_sample_size)
-        # self.ui.cBox_Source.currentIndexChanged.connect(self._source_changed)
 
         self._update_port()
 

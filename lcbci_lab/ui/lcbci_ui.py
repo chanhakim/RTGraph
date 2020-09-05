@@ -97,14 +97,6 @@ class main_ui(object):
         self.cBox_BaudRate.setFixedWidth(140)
         self.control_layout.addWidget(self.cBox_BaudRate)
 
-        # control layout: frequency spin box
-        self.sBox_Frequency = QtWidgets.QSpinBox()
-        self.sBox_Frequency.setObjectName("sBox_Frequency")
-        self.sBox_Frequency.setMinimum(1)
-        self.sBox_Frequency.setMaximum(1000)
-        self.sBox_Frequency.setProperty('value', 200)
-        self.control_layout.addWidget(self.sBox_Frequency)
-
         # control layout: plot sample no. spin box
         self.sBox_Samples = QtWidgets.QSpinBox()
         self.sBox_Samples.setObjectName("sBox_Samples")
@@ -143,7 +135,6 @@ class main_ui(object):
         self.pButton_Stop.setText(_translate("MainWindow", "Stop"))
         self.pButton_Record.setText(_translate("MainWindow", "Record"))
         self.pButton_Save.setText(_translate("MainWindow", "Save"))
-        self.sBox_Frequency.setSuffix(_translate("MainWindow", " Hz"))
         self.sBox_Samples.setSuffix(_translate("MainWindow", " Samples"))
         
         # self.pButton_Stop.setText(_translate("MainWindow", "Stop"))

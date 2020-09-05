@@ -35,14 +35,6 @@ class Constants:
     serial_default_speed = 115200
     serial_timeout_ms = 0.5
 
-    class SocketClient:
-        timeout = 0.01
-        host_default = "localhost"
-        port_default = [5555, 8080, 9090]
-        buffer_recv_size = 1024
-
-    simulator_default_speed = 0.002
-
     csv_default_filename = "%Y-%m-%d_%H-%M-%S"
     csv_delimiter = ","
     csv_extension = "csv"
