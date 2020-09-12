@@ -1,4 +1,3 @@
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class _qline(QtWidgets.QFrame):
@@ -23,7 +22,7 @@ class main_ui(object):
         # create main layout
         self.main_layout = QtWidgets.QVBoxLayout()
         self.main_layout.setObjectName("main_layout")
-        self.main_layout.addWidget(QtWidgets.QLabel("lcbci lab v0.0.1"))
+        self.main_layout.addWidget(QtWidgets.QLabel("mBCI Lab v0.0.1"))
 
         # main layout: plot widget
         self.plt = GraphicsLayoutWidget()
@@ -130,7 +129,7 @@ class main_ui(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "lcbci_lab"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "mbci_lab"))
         self.pButton_Start.setText(_translate("MainWindow", "Start"))
         self.pButton_Stop.setText(_translate("MainWindow", "Stop"))
         self.pButton_Record.setText(_translate("MainWindow", "Record"))

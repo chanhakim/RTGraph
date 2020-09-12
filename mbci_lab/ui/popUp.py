@@ -45,5 +45,5 @@ class PopUp:
         :return filepath:
         :rtype str:
         """
-        file_name, _ = QtGui.QFileDialog.getSaveFileName(parent, caption='Save File', directory='{path}/lcbci_recording_{date}'.format(path=str(Path.home()), date=datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')), filter='*.csv')
+        file_name, _ = QtGui.QFileDialog.getSaveFileName(parent, caption='Save File', directory='{path}/mbci_recording_{date}'.format(path=str(Path.home()), date=datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')), filter='*.csv')
         return file_name

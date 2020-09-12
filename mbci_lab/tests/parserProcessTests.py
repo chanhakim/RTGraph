@@ -2,8 +2,8 @@ import unittest
 import numpy as np
 from multiprocessing import Queue
 
-from lcbci_lab.processors.Parser import ParserProcess
-from lcbci_lab.core.constants import Constants
+from mbci_lab.processors.Parser import ParserProcess
+from mbci_lab.core.constants import Constants
 
 
 class ParserProcessTests(unittest.TestCase):

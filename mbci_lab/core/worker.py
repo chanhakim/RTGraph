@@ -1,11 +1,11 @@
 from multiprocessing import Queue
 
-from lcbci_lab.core.constants import Constants, SourceType
-from lcbci_lab.core.ringBuffer import RingBuffer
-from lcbci_lab.processors.Csv import CSVProcess
-from lcbci_lab.processors.Parser import ParserProcess
-from lcbci_lab.processors.Serial import SerialProcess
-from lcbci_lab.common.logger import Logger as Log
+from mbci_lab.core.constants import Constants, SourceType
+from mbci_lab.core.ringBuffer import RingBuffer
+from mbci_lab.processors.Csv import CSVProcess
+from mbci_lab.processors.Parser import ParserProcess
+from mbci_lab.processors.Serial import SerialProcess
+from mbci_lab.common.logger import Logger as Log
 
 
 TAG = "Worker"

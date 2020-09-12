@@ -1,11 +1,11 @@
 import shutil
 
-from lcbci_lab.ui.lcbci_ui import *
+from mbci_lab.ui.mbci_ui import *
 
-from lcbci_lab.core.worker import Worker
-from lcbci_lab.core.constants import Constants, SourceType
-from lcbci_lab.ui.popUp import PopUp
-from lcbci_lab.common.logger import Logger as Log
+from mbci_lab.core.worker import Worker
+from mbci_lab.core.constants import Constants, SourceType
+from mbci_lab.ui.popUp import PopUp
+from mbci_lab.common.logger import Logger as Log
 
 TAG = "MainWindow"
 

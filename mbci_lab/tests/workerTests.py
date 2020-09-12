@@ -1,8 +1,8 @@
 import unittest
 from time import sleep
 
-from lcbci_lab.core.worker import Worker
-from lcbci_lab.core.constants import SourceType
+from mbci_lab.core.worker import Worker
+from mbci_lab.core.constants import SourceType
 
 
 class WorkerTests(unittest.TestCase):

@@ -14,7 +14,7 @@ class Constants:
     """
     Common constants for the application.
     """
-    app_title = "lcbci_lab"
+    app_title = "mBCI Lab"
     app_version = '0.0.1'
     app_export_path = "data"
     app_sources = ["Serial"]

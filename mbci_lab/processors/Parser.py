@@ -1,8 +1,8 @@
 import multiprocessing
 from time import sleep
 
-from lcbci_lab.core.constants import Constants
-from lcbci_lab.common.logger import Logger as Log
+from mbci_lab.core.constants import Constants
+from mbci_lab.common.logger import Logger as Log
 
 
 TAG = "Parser"

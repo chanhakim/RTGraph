@@ -4,10 +4,10 @@ from time import time
 import serial
 from serial.tools import list_ports
 
-from lcbci_lab.common.architecture import Architecture
-from lcbci_lab.common.architecture import OSType
-from lcbci_lab.core.constants import Constants
-from lcbci_lab.common.logger import Logger as Log
+from mbci_lab.common.architecture import Architecture
+from mbci_lab.common.architecture import OSType
+from mbci_lab.core.constants import Constants
+from mbci_lab.common.logger import Logger as Log
 
 
 TAG = "Serial"

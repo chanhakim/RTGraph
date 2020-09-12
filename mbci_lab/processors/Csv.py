@@ -3,9 +3,9 @@ import csv
 import multiprocessing
 from time import strftime, gmtime, sleep
 
-from lcbci_lab.core.constants import Constants
-from lcbci_lab.common.fileManager import FileManager
-from lcbci_lab.common.logger import Logger as Log
+from mbci_lab.core.constants import Constants
+from mbci_lab.common.fileManager import FileManager
+from mbci_lab.common.logger import Logger as Log
 
 
 TAG = "CSV"
