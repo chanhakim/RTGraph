@@ -39,6 +39,19 @@ class PopUp:
         QtGui.QMessageBox.warning(parent, title, message, QtGui.QMessageBox.Ok)
 
     @staticmethod
+    def message(parent, title, message):
+        """
+        Shows a Pop up message dialog with a Ok buttons.
+        :param parent: Parent window for the dialog.
+        :param title: Title of the dialog.
+        :type title: str.
+        :param message: Message to be shown in the content of the dialog.
+        :type message: str.
+        :return:
+        """
+        QtGui.QMessageBox.information(parent, title, message, QtGui.QMessageBox.Ok)
+
+    @staticmethod
     def save_file(parent):
         """
         Shows a popup window for saving the file at a desired path with name.

@@ -40,6 +40,9 @@ class main_ui(object):
         self.tBrowser_Log.setFixedHeight(120)
         self.tBrowser_Log.setObjectName("tBrowser_Log")
         self.main_layout.addWidget(self.tBrowser_Log)
+        self.tBrowser_Log.append("mBCI Lab is a fork of RTGraph and a real-time graphing program for the mBCI project.\nIts purpose is to plot neural signals in real time.\nIt can also be used for any single-time-domain, serial-port device.\nLink to mBCI project: https://github.com/chanhakim/mbci")
+        self.tBrowser_Log.append("-------------------------")
+
 
         # create control layout
         self.control_layout = QtWidgets.QVBoxLayout()
@@ -48,11 +51,11 @@ class main_ui(object):
         empty.setFixedWidth(140)
         self.control_layout.addWidget(empty)
 
-        # control layout: control options label
-        self.qLabel_ControlOptions = QtWidgets.QLabel("Control Options")
-        self.qLabel_ControlOptions.setObjectName("qLabel_ControlOptions")
-        self.qLabel_ControlOptions.setAlignment(QtCore.Qt.AlignCenter)
-        self.control_layout.addWidget(self.qLabel_ControlOptions)
+        # control layout: view options label
+        self.qLabel_ViewOptions = QtWidgets.QLabel("View Options")
+        self.qLabel_ViewOptions.setObjectName("qLabel_ViewOptions")
+        self.qLabel_ViewOptions.setAlignment(QtCore.Qt.AlignCenter)
+        self.control_layout.addWidget(self.qLabel_ViewOptions)
 
         # control layout: start button
         self.pButton_Start = QtWidgets.QPushButton("Start")
@@ -63,6 +66,22 @@ class main_ui(object):
         self.pButton_Stop = QtWidgets.QPushButton("Stop")
         self.pButton_Stop.setObjectName("pButton_Stop")
         self.control_layout.addWidget(self.pButton_Stop)
+
+        self.control_layout.addWidget(_qline()) # hline separator
+
+        # control layout: record options label
+        self.qLabel_RecordOptions = QtWidgets.QLabel("Record Options")
+        self.qLabel_RecordOptions.setObjectName("qLabel_RecordOptions")
+        self.qLabel_RecordOptions.setAlignment(QtCore.Qt.AlignCenter)
+        self.control_layout.addWidget(self.qLabel_RecordOptions)
+
+        # control layout: plot sample no. spin box
+        self.sBox_Seconds = QtWidgets.QSpinBox()
+        self.sBox_Seconds.setObjectName("sBox_Seconds")
+        self.sBox_Seconds.setMinimum(0)
+        self.sBox_Seconds.setMaximum(3600)
+        self.sBox_Seconds.setProperty('value', 0)
+        self.control_layout.addWidget(self.sBox_Seconds)
 
         # control layout: record button
         self.pButton_Record = QtWidgets.QPushButton("Record")
@@ -106,16 +125,10 @@ class main_ui(object):
 
         self.control_layout.addWidget(_qline()) # hline separator
 
-        # control layout: experiments label
-        self.qLabel_Experiments = QtWidgets.QLabel("Experiments")
-        self.qLabel_Experiments.setObjectName("qLabel_Experiments")
-        self.qLabel_Experiments.setAlignment(QtCore.Qt.AlignCenter)
-        self.control_layout.addWidget(self.qLabel_Experiments)
-
-        # control layout: record 90s button 
-        self.pButton_Record90s = QtWidgets.QPushButton("Record 90s")
-        self.pButton_Record90s.setObjectName("pButton_Record90s")
-        self.control_layout.addWidget(self.pButton_Record90s)
+        # control layout: record button
+        self.pButton_Help = QtWidgets.QPushButton("Help")
+        self.pButton_Help.setObjectName("pButton_Help")
+        self.control_layout.addWidget(self.pButton_Help)
 
         self.control_layout.addStretch() # add stretch to bottom of controls
 
@@ -133,14 +146,10 @@ class main_ui(object):
         self.pButton_Start.setText(_translate("MainWindow", "Start"))
         self.pButton_Stop.setText(_translate("MainWindow", "Stop"))
         self.pButton_Record.setText(_translate("MainWindow", "Record"))
+        self.pButton_Help.setText(_translate("MainWindow", "Help"))
         self.pButton_Save.setText(_translate("MainWindow", "Save"))
         self.sBox_Samples.setSuffix(_translate("MainWindow", " Samples"))
-        
-        # self.pButton_Stop.setText(_translate("MainWindow", "Stop"))
-        # self.pButton_Start.setText(_translate("MainWindow", "Start"))
-        # self.sBox_Samples.setSuffix(_translate("MainWindow", " samples"))
-        # self.sBox_Samples.setPrefix(_translate("MainWindow", "Show "))
-        # self.chBox_export.setText(_translate("MainWindow", "Export to CSV"))
+        self.sBox_Seconds.setSuffix(_translate("MainWindow", " Seconds"))
 
 
 from pyqtgraph import GraphicsLayoutWidget
