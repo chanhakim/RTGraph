@@ -145,7 +145,6 @@ class MainWindow(QtGui.QMainWindow):
             self.ui.tBrowser_Log.append("Terminated save due to an error.")
             PopUp.warning(self, Constants.app_title, "Record signal before saving.")
         
-
     def help(self):
         """
         Opens the message for the program.
